@@ -11,15 +11,15 @@ import numpy as np
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-r","--dataroot",required=True,help="root image directory")
-ap.add_argument("-n","--nepochs",required=True,help="no of epochs to run")
-ap.add_argument("--lr",nargs="?",const=0.0002,type=int,required=False,help="learning rate")
+ap.add_argument("-n","--nepochs",required=True,type = int,help="no of epochs to run")
+ap.add_argument("--lr",nargs="?",default=0.0002,type=float,help="learning rate")
 ap.add_argument("-sv","--savemod",required=True,help="directory to save model")
-ap.add_argument("--beta",nargs="?",const="0.5",required=False,type=int,help="beta hyperparam for adam opt")
-ap.add_argument("--bs",nargs="?",required=False,const = 128,type=int,help="batch size default 128")
-ap.add_argument("--device",nargs="?",required=False,help="cpu or cuda")
-ap.add_argument("--ngpu",nargs="?",const=0,type = int,required=False,help="no of GPU")
-ap.add_argument("--workers",nargs="?",const=4,type=int,required=False,help="no of workers to load more workers==more memory usage==faster data loading")
-ap.add_argument("--anm",nargs="?",const=True,type=bool,required=False,help="should create animatopn")
+ap.add_argument("--beta",nargs="?",default=0.5,type=float,help="beta hyperparam for adam opt")
+ap.add_argument("--bs",nargs="?",default= 128,type=int,help="batch size default 128")
+ap.add_argument("--device",nargs="?",default = "cpu" ,help="cpu or cuda")
+ap.add_argument("--ngpu",nargs="?",default = 0,type=int,help="no of GPU")
+ap.add_argument("--workers",nargs="?",default = 4,type = int,help="no of workers to load more workers==more memory usage==faster data loading")
+ap.add_argument("--anm",nargs="?",default = True,type=bool,help="should create animatopn")
 
 
 
@@ -34,10 +34,13 @@ save_path = args['savemod']
 nz=100
 num_epochs = args["nepochs"]
 canimation = args["anm"]
+
+print(args)
+
 dataloader = torch.utils.data.DataLoader(dataset(dataroot), 
                                          batch_size=batch_size,
-                                         shuffle=True, 
-                                         num_workers=workers)
+                                         shuffle=True ,
+                                         num_workers=num_workers)
 
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu") if (args["device"]=="cpu") else torch.device("cpu")
 
