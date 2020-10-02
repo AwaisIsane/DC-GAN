@@ -16,7 +16,7 @@ ap.add_argument("--lr",nargs="?",default=0.0002,type=float,help="learning rate")
 ap.add_argument("-sv","--savemod",required=True,help="directory to save model")
 ap.add_argument("--beta",nargs="?",default=0.5,type=float,help="beta hyperparam for adam opt")
 ap.add_argument("--bs",nargs="?",default= 128,type=int,help="batch size default 128")
-ap.add_argument("--device",nargs="?",default = "cpu" ,help="cpu or cuda")
+#ap.add_argument("--device",nargs="?",default = "cpu" ,help="cpu or cuda")
 ap.add_argument("--ngpu",nargs="?",default = 0,type=int,help="no of GPU")
 ap.add_argument("--workers",nargs="?",default = 4,type = int,help="no of workers to load more workers==more memory usage==faster data loading")
 ap.add_argument("--anm",nargs="?",default = True,type=bool,help="should create animatopn")
@@ -42,7 +42,7 @@ dataloader = torch.utils.data.DataLoader(dataset(dataroot),
                                          shuffle=True ,
                                          num_workers=num_workers)
 
-device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu") if (args["device"]=="cpu") else torch.device("cpu")
+device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu") 
 
 netG = Generator(ngpu).to(device)
 netD = Discriminator(ngpu).to(device)
