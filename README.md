@@ -21,4 +21,7 @@ optional arguments:
                         usage==faster data loading
   --anm [ANM]           should create animatopn
   
-``` 
+```
+<br><br>
+<b>Training Process</b><br><br>
+![](trainingproc.gif)
