@@ -17,7 +17,7 @@ ap.add_argument("-sv","--savemod",required=True,help="directory to save model")
 ap.add_argument("--beta",nargs="?",default=0.5,type=float,help="beta hyperparam for adam opt")
 ap.add_argument("--bs",nargs="?",default= 128,type=int,help="batch size default 128")
 #ap.add_argument("--device",nargs="?",default = "cpu" ,help="cpu or cuda")
-ap.add_argument("--ngpu",nargs="?",default = 0,type=int,help="no of GPU")
+ap.add_argument("--ngpu",nargs="?",default = 1,type=int,help="no of GPU")
 ap.add_argument("--workers",nargs="?",default = 4,type = int,help="no of workers to load more workers==more memory usage==faster data loading")
 ap.add_argument("--anm",nargs="?",default = True,type=bool,help="should create animatopn")
 
@@ -42,12 +42,12 @@ dataloader = torch.utils.data.DataLoader(dataset(dataroot),
                                          shuffle=True ,
                                          num_workers=num_workers)
 
-device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu") 
-
+device = torch.device("cuda" if (torch.cuda.is_available() and ngpu > 0) else "cpu") 
+print(device)
 netG = Generator(ngpu).to(device)
 netD = Discriminator(ngpu).to(device)
 # Handle multi-gpu if desired
-if (device.type == 'cuda') and (ngpu > 1):
+if (device.type == 'cuda:0') and (ngpu > 1):
     netG = nn.DataParallel(netG, list(range(ngpu)))
     netD = nn.DataParallel(netD,list(range(ngpu)))
 # Apply the weights_init function to randomly initialize all weights
@@ -89,7 +89,6 @@ print("Starting Training Loop...")
 for epoch in range(num_epochs):
     # For each batch in the dataloader
     for i, data in enumerate(dataloader, 0):
-
         ############################
         # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
         ###########################
